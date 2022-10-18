@@ -2,27 +2,6 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main{
-    /*public static Studente strutturaNomi (String s, Studente a){
-        int pos = s.indexOf(';');
-        a.nome = s.substring(0, pos);
-
-        //String nuova = s.substring(pos+1, s.length()-1);
-        a.cognome = s.substring(pos+1, s.length());
-        //System.out.println(a.nome);
-        //System.out.println(a.cognome);
-
-        return a;
-    }*/
-
-    public static double timeInizio(){
-        return System.currentTimeMillis();
-    }
-
-    public static int tempo (double inizio){
-        double fine = System.currentTimeMillis();
-        return (int) (fine - inizio / 1000.0);
-    }
-
     public static void selectionSort(String [] array, int n) {
         for(int i = 0; i < n-1; i++) {
             int minimo = i; //Partiamo dall' i-esimo elemento
@@ -30,7 +9,6 @@ public class Main{
             for(int j = i+1; j < n; j++) {
                 //confronto del carattere c delle due parole
                 int c = 0;
-
                 while(array[minimo].charAt(c) == array[j].charAt(c))
                     c++; //finchè sono uguali passa alla lettera dopo
 
@@ -48,10 +26,58 @@ public class Main{
         }
     }
 
-    public static void stampaFile (String[] v){
+
+    public static int partition (String[] v, int inizio, int fine){
+        String pivot = v[fine];
+        int j = fine-1;
+        while (j >= 0 && inizio<=j){
+            int c = 0;
+            while(v[inizio].charAt(c) == pivot.charAt(c))
+                c++;
+
+            while (v[inizio].charAt(c) < pivot.charAt(c)){
+                c = 0;
+                inizio++;
+                while(v[inizio].charAt(c) == pivot.charAt(c))
+                    c++;
+            }
+
+            while (j > inizio && v[j].charAt(c) > pivot.charAt(c)){
+                c = 0;
+                j--;
+                while(v[j].charAt(c) == pivot.charAt(c))
+                    c++;
+            }
+
+            if (inizio >= j)
+                break;
+
+            String temp = v[inizio];
+            v[inizio] = v[j];
+            v[j] = temp;
+        }
+        String temp = v[inizio];
+        v[inizio] = v[fine];
+        v[fine] = temp;
+        return inizio;
+    }
+
+    public static void quickSort (String[] v, int inizio, int fine){
+        if (inizio>=fine)
+            return;
+        int i = partition(v,inizio,fine);
+        quickSort(v,inizio,i-1);
+        quickSort(v,i+1,fine);
+    }
+
+    public static void stampaFile (String[] v, int n, int t){
+        FileWriter f;
         try{
-            FileWriter f = new FileWriter("alunni_alfabetico.txt");
-            for (int j = 0; j < 4; j++) {
+            if (t == 0)
+                f = new FileWriter("alunni_s_" + n + ".txt");
+            else
+                f = new FileWriter("alunni_q_" + n + ".txt");
+            for (int j = 0; j < n; j++) {
                 f.write(v[j]);
                 f.write("\n");
             }
@@ -62,36 +88,49 @@ public class Main{
         }
     }
 
+    public static void leggiFile (String[] v, int dim){
+        int i = 0;
+        try{
+            File f = new File("Nomi_" + dim + ".csv");
+            Scanner s = new Scanner(f);
+            while(s.hasNextLine()){
+                String linea = s.nextLine(); //linea diventa la riga del file
+                v[i] = linea;
+                i++;
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
     public static void main (String[] args){
 
         int dim = 20;
+        String []v = new String [2000000];
+        String []a = new String [2000000];
 
-        //selection sort
-        for (int j = 0; j < 6; j++) {
-
-            String []v = new String [dim];
+        for (int j = 0; j < 1; j++) {
 
         /*for (int i = 0; i < 10; i++) {
             v[i] = new Studente();
         }*/
-            int i = 0;
-            try{
-                File f = new File("Nomi_" + dim + ".csv");
-                Scanner s = new Scanner(f);
-                while(s.hasNextLine()){
-                    String linea = s.nextLine(); //linea diventa la riga del file
-                    v[i] = linea;
-                    i++;
-                }
-            }catch(Exception e){
-                System.out.println(e);
-            }
+            //selection sort
 
-            double inizio = timeInizio();
+            leggiFile(v, dim);
+            long inizio = System.currentTimeMillis();
             selectionSort(v, dim);
-            int fine = tempo(inizio);
-            System.out.println("con" + dim + "elementi ci ha messo: " + fine);
-            stampaFile(v);
+            long fine = System.currentTimeMillis();
+            System.out.println("con " + dim + " elementi il selection sort ci ha messo: " + (fine-inizio)/1000.0 + " secondi");
+            stampaFile(v, dim, 0);
+
+            //quick sort
+            leggiFile(a, dim);
+            inizio = System.currentTimeMillis();
+            quickSort(a, 0, dim-1);
+            fine = System.currentTimeMillis();
+            System.out.println("con " + dim + " elementi il quick sort " +
+                    "ci ha messo: " + (fine - inizio)/1000.0 + " secondi");
+            stampaFile(a, dim, 1);
 
             dim *= 10;
         }
