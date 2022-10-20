@@ -28,38 +28,41 @@ public class Main{
 
 
     public static int partition (String[] v, int inizio, int fine){
-        String pivot = v[fine];
+        int i = inizio;
         int j = fine-1;
-        while (j >= 0 && inizio<=j){
+        while (i <= j){
             int c = 0;
-            while(v[inizio].charAt(c) == pivot.charAt(c))
+            while(v[i].charAt(c) == v[fine].charAt(c))
                 c++;
 
-            while (v[inizio].charAt(c) < pivot.charAt(c)){
+            while (v[i].charAt(c) < v[fine].charAt(c)){
                 c = 0;
-                inizio++;
-                while(v[inizio].charAt(c) == pivot.charAt(c))
+                i++;
+                while(v[i].charAt(c) == v[fine].charAt(c) && v[i] != v[fine])
                     c++;
             }
 
-            while (j > inizio && v[j].charAt(c) > pivot.charAt(c)){
+            c = 0;
+            while(v[j].charAt(c) == v[fine].charAt(c))
+                c++;
+            while (j > inizio && v[j].charAt(c) > v[fine].charAt(c)){
                 c = 0;
                 j--;
-                while(v[j].charAt(c) == pivot.charAt(c))
+                while(v[j].charAt(c) == v[fine].charAt(c) && v[j] != v[fine])
                     c++;
             }
 
-            if (inizio >= j)
+            if (i >= j)
                 break;
 
-            String temp = v[inizio];
-            v[inizio] = v[j];
+            String temp = v[i];
+            v[i] = v[j];
             v[j] = temp;
         }
-        String temp = v[inizio];
-        v[inizio] = v[fine];
+        String temp = v[i];
+        v[i] = v[fine];
         v[fine] = temp;
-        return inizio;
+        return i;
     }
 
     public static void quickSort (String[] v, int inizio, int fine){
@@ -114,8 +117,9 @@ public class Main{
         /*for (int i = 0; i < 10; i++) {
             v[i] = new Studente();
         }*/
-            //selection sort
-
+            /**
+             * selection sort
+             */
             leggiFile(v, dim);
             long inizio = System.currentTimeMillis();
             selectionSort(v, dim);
@@ -123,7 +127,9 @@ public class Main{
             System.out.println("con " + dim + " elementi il selection sort ci ha messo: " + (fine-inizio)/1000.0 + " secondi");
             stampaFile(v, dim, 0);
 
-            //quick sort
+            /**
+             * quick sort
+             */
             leggiFile(a, dim);
             inizio = System.currentTimeMillis();
             quickSort(a, 0, dim-1);
