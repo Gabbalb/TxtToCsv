@@ -1,6 +1,13 @@
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * Comparare metodi di ordinamento
+ *
+ * @author Scarsato Andrea and Balbiani Gabriele
+ * @version 20/10/2022
+ */
+
 public class Main{
 
     public static void selectionSort(String [] array, int n) {
@@ -36,41 +43,11 @@ public class Main{
         int i = inizio;
         int j = fine-1;
         while (i <= j){
-            int c = 0;
-            while(v[i].charAt(c) == v[fine].charAt(c)){
-                c++;
-                if (c >= v[i].length()-1 || c >= v[fine].length()-1)
-                    break;
-            }
-
-
-            while (v[i].charAt(c) < v[fine].charAt(c)){
-                c = 0;
+            while (v[i].compareTo(v[fine]) < 0)
                 i++;
-                while(v[i].charAt(c) == v[fine].charAt(c) /*&& v[i] != v[fine]*/){
-                    c++;
-                    if (c >= v[i].length()-1 || c >= v[fine].length()-1)
-                        break;
-                }
-            }
 
-            c = 0;
-            while(v[j].charAt(c) == v[fine].charAt(c)){
-                c++;
-                if (c >= v[j].length()-1 || c >= v[fine].length()-1)
-                    break;
-            }
-
-            while (j > inizio && v[j].charAt(c) > v[fine].charAt(c)){
-                c = 0;
+            while (j > inizio && v[j].compareTo(v[fine]) >= 0)
                 j--;
-                while(v[j].charAt(c) == v[fine].charAt(c) /*&& v[j] != v[fine]*/){
-                    c++;
-                    if (c >= v[j].length()-1 || c >= v[fine].length()-1)
-                        break;
-                }
-
-            }
 
             if (i >= j)
                 break;
@@ -153,9 +130,6 @@ public class Main{
 
         for (int j = 0; j < 6; j++) {
 
-        /*for (int i = 0; i < 10; i++) {
-            v[i] = new Studente();
-        }*/
             /**
              * selection sort
              */
@@ -171,14 +145,14 @@ public class Main{
             /**
              * quick sort
              */
-            /*leggiFile(a, dim);
+            leggiFile(a, dim);
             inizio = System.currentTimeMillis();
             quickSort(a, 0, dim-1);
             fine = System.currentTimeMillis();
             System.out.println("con " + dim + " elementi il quick sort " +
                     "ci ha messo: " + (fine - inizio)/1000.0 + " secondi");
-
-            tempo_qui[k] = (fine - inizio)/1000.0;*/ k++;
+            stampaFile(a, dim, 1);
+            tempo_qui[k] = (fine - inizio)/1000.0; k++;
 
             dim *= 10;
         }
