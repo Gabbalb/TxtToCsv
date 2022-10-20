@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main{
+
     public static void selectionSort(String [] array, int n) {
         for(int i = 0; i < n-1; i++) {
             int minimo = i; //Partiamo dall' i-esimo elemento
@@ -9,8 +10,12 @@ public class Main{
             for(int j = i+1; j < n; j++) {
                 //confronto del carattere c delle due parole
                 int c = 0;
-                while(array[minimo].charAt(c) == array[j].charAt(c))
-                    c++; //finchè sono uguali passa alla lettera dopo
+                while(array[minimo].charAt(c) == array[j].charAt(c)){
+                    c++;
+                    if (c >= array[minimo].length()-1 || c >= array[j].length()-1)
+                        break;
+                }
+                     //finchè sono uguali passa alla lettera dopo
 
                 if(array[minimo].charAt(c) > array[j].charAt(c)) {
                     minimo = j;
@@ -32,24 +37,39 @@ public class Main{
         int j = fine-1;
         while (i <= j){
             int c = 0;
-            while(v[i].charAt(c) == v[fine].charAt(c))
+            while(v[i].charAt(c) == v[fine].charAt(c)){
                 c++;
+                if (c >= v[i].length()-1 || c >= v[fine].length()-1)
+                    break;
+            }
+
 
             while (v[i].charAt(c) < v[fine].charAt(c)){
                 c = 0;
                 i++;
-                while(v[i].charAt(c) == v[fine].charAt(c) && v[i] != v[fine])
+                while(v[i].charAt(c) == v[fine].charAt(c) /*&& v[i] != v[fine]*/){
                     c++;
+                    if (c >= v[i].length()-1 || c >= v[fine].length()-1)
+                        break;
+                }
             }
 
             c = 0;
-            while(v[j].charAt(c) == v[fine].charAt(c))
+            while(v[j].charAt(c) == v[fine].charAt(c)){
                 c++;
+                if (c >= v[j].length()-1 || c >= v[fine].length()-1)
+                    break;
+            }
+
             while (j > inizio && v[j].charAt(c) > v[fine].charAt(c)){
                 c = 0;
                 j--;
-                while(v[j].charAt(c) == v[fine].charAt(c) && v[j] != v[fine])
+                while(v[j].charAt(c) == v[fine].charAt(c) /*&& v[j] != v[fine]*/){
                     c++;
+                    if (c >= v[j].length()-1 || c >= v[fine].length()-1)
+                        break;
+                }
+
             }
 
             if (i >= j)
@@ -106,13 +126,32 @@ public class Main{
         }
     }
 
+    public static void scriviTempo (double[] a, double[] b){
+        FileWriter tempi;
+        int dim = 20;
+        try{
+            tempi = new FileWriter("Risultati.csv");
+            for (int i = 0; i < 5; i++) {
+                tempi.write(dim + ";" + a[i] + ";" + b[i] + "\n");
+                dim *= 10;
+            }
+            tempi.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void main (String[] args){
 
         int dim = 20;
         String []v = new String [2000000];
         String []a = new String [2000000];
+        double[] tempo_sel = new double[6];
+        double[] tempo_qui = new double[6];
+        int k = 0;
 
-        for (int j = 0; j < 1; j++) {
+        for (int j = 0; j < 6; j++) {
 
         /*for (int i = 0; i < 10; i++) {
             v[i] = new Studente();
@@ -127,28 +166,23 @@ public class Main{
             System.out.println("con " + dim + " elementi il selection sort ci ha messo: " + (fine-inizio)/1000.0 + " secondi");
             stampaFile(v, dim, 0);
 
+            tempo_sel[k] = (fine-inizio)/1000.0;
+
             /**
              * quick sort
              */
-            leggiFile(a, dim);
+            /*leggiFile(a, dim);
             inizio = System.currentTimeMillis();
             quickSort(a, 0, dim-1);
             fine = System.currentTimeMillis();
             System.out.println("con " + dim + " elementi il quick sort " +
                     "ci ha messo: " + (fine - inizio)/1000.0 + " secondi");
-            stampaFile(a, dim, 1);
+
+            tempo_qui[k] = (fine - inizio)/1000.0;*/ k++;
 
             dim *= 10;
         }
 
-
-        //TODO:quick sort
-
-        /*for (int j = 0; j < v.length; j++) {
-            System.out.println(v[j]);
-        }*/
-
-        //TODO: aggumgere funzione tempo
-
+        scriviTempo(tempo_sel, tempo_qui);
     }
 }
